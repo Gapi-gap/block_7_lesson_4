@@ -91,17 +91,18 @@ void Clients::DeleteClient(const int& id_clients)
     }
 }
 
-void Clients::FindClient()
+std::vector<int> Clients::FindClient()
 {
     std::cout << "find a client by phone number? 1 - yes  ";
     std::string action;
     std::cin >> action;
+    std::vector<int>result;
     if (action == "1")
     {
         std::string phone;
         std::cout << "Input phone numbers: ";
         std::cin >> phone;
-        FindClientsNumberPhone(phone);
+        result = FindClientsNumberPhone(phone);
     }
     else
     {
@@ -112,39 +113,44 @@ void Clients::FindClient()
         std::cin >> last_name;
         std::cout << "Input emails: ";
         std::cin >> email;
-        FindClientsByInformation(first_name, last_name, email);
+        result = FindClientsByInformation(first_name, last_name, email);
 
     }
+    return result;
 }
 
-void Clients::FindClientsByInformation(const std::string& first_name, const std::string& last_name, const std::string& emails)
+std::vector<int> Clients::FindClientsByInformation(const std::string& first_name, const std::string& last_name, const std::string& emails)
 {
     pqxx::work find_tx{ conn };
 
      auto client_id = find_tx.query<int>(
         "SELECT id FROM client WHERE first_name = '" + find_tx.esc(first_name) + "' AND email = '"
         + find_tx.esc(emails) + "' AND last_name = '" + find_tx.esc(last_name) + "'; ");
+     std::vector<int>result;
      for (const auto& tuple : client_id)
      {
          int clients_id = std::get<0>(tuple);
-         std::cout << clients_id << " ";
+         result.push_back(clients_id);
      }
-     std::cout << std::endl;
+   
      find_tx.commit();
+     return result;
 }
 
-void Clients::FindClientsNumberPhone(const std::string& phone)
+std::vector<int> Clients::FindClientsNumberPhone(const std::string& phone)
 {
     pqxx::work find_tx{ conn };
     auto client_id = find_tx.query<int>(
         "SELECT id_clients FROM telephone WHERE phone = '" + find_tx.esc(phone) + "';");
+    std::vector<int>result;
     for (const auto& tuple : client_id)
     {
         int clients_id = std::get<0>(tuple);
-        std::cout << clients_id << " ";
+        result.push_back(clients_id);
     }
-    std::cout << std::endl;
+    
     find_tx.commit();
+    return result;
 }
 
 void Clients::ChangingCustomerData(const std::string& first_name, const std::string& last_name, const std::string& email, const int&id)

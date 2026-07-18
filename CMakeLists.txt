@@ -11,7 +11,7 @@ set(PostgreSQL_ADDITIONAL_VERSIONS "17")
 
 add_subdirectory(D:/libpq/libpqxx-8.0.1 build-pqxx)
 
-add_executable(MyProjectName main.cpp Clients.h Clients.cpp)
+add_executable(MyProjectName main.cpp Clients.h Clients.cpp "menu.h" "menu.cpp")
 
 # Линкуемся к только что собранной цели 'pqxx'
 target_link_libraries(MyProjectName PRIVATE pqxx)

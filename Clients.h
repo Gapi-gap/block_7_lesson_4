@@ -13,11 +13,11 @@ public:
 	void AddMobile(const std::string&, const int&);
 	void DeleteMobile(const int&);
 	void DeleteClient(const int&);
-	void FindClient();
+	std::vector<int> FindClient();
 	void ChangingCustomerData(const std::string&, const std::string&, const std::string&, const int&);
 private:
 	pqxx::connection conn;
 	//std::string query_add_clients_info;
-	void FindClientsNumberPhone(const std::string&);
-	void FindClientsByInformation(const std::string&, const std::string&,const std::string&);
+	std::vector<int> FindClientsNumberPhone(const std::string&);
+	std::vector<int> FindClientsByInformation(const std::string&, const std::string&,const std::string&);
 };
